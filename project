@@ -4,7 +4,13 @@ import datetime
 import wikipedia  # pip install wikipedia
 import webbrowser
 import os
+import time
 import smtplib
+import subprocess
+import pyjokes
+import win32com.client as wincl
+from urllib.request import urlopen
+from email.message import EmailMessage
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -12,7 +18,7 @@ voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)  #male voice
 
 
-def speak(audio):             
+def speak(audio):
     engine.say(audio)
     engine.runAndWait()
 
@@ -29,6 +35,42 @@ def wishMe():
         speak("Good Evening!")
 
     speak("Hey Vaishu, I am  your personal assistant. Please tell me how may I help you")
+
+def send_email(receiver, subject, message):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    # Make sure to give app access in your Google account
+    server.login('pyprojectvirtual@gmail.com', '#password')
+    email = EmailMessage()
+    email['From'] = 'pyprojectvirtual@gmail.com'#user email
+    email['To'] = receiver
+    email['Subject'] = subject
+    email.set_content(message)
+    server.send_message(email)
+
+email_list = {
+    'vaishali': 'svaishu022@gmail.com',
+    'valli': 'valliammai102000@gmail.com',
+    'sharmila': 'sharmilaropheka@gmail.com',
+    'kani': 'kanimozhianbuselvi@gmail.com',
+  
+}
+
+def get_email_info():
+    speak('To Whom you want to send email')
+    name = takeCommand()
+    receiver = email_list[name]
+    print(receiver)
+    speak('What is the subject of your email?')
+    subject = takeCommand()
+    speak('Tell me the text in your email')
+    message = takeCommand()
+    send_email(receiver, subject, message)
+    speak('Hey lazy ass. Your email is sent')
+    speak('Do you want to send more email?')
+    send_more = takeCommand()
+    if 'yes' in send_more:
+        get_email_info()
 
 
 def takeCommand():
@@ -76,20 +118,51 @@ if __name__ == "__main__":
         elif 'open stackoverflow' in query:
             webbrowser.open("stackoverflow.com")
 
+        elif 'play online music' in query:
+            webbrowser.open("gaana.com")
 
-        elif 'play music' in query:
-            music_dir = 'C:\\Users\\svais\\OneDrive\\Desktop\\song'
-            songs = os.listdir(music_dir)
-            print(songs)
-            os.startfile(os.path.join(music_dir, songs[2]))
+        elif 'shutdown' in query:
+            subprocess.call(["shutdown", "/s"])
 
-        elif 'the time' in query:
+        elif 'restart' in query:
+            subprocess.call(["shutdown", "/r"])
+
+        elif 'online music in gaana' in query or 'gaana' in query:
+            webbrowser.open("gaana.com")
+
+        elif 'online music in spotify' in query or 'spotify' in query:
+            webbrowser.open("spotify.com")
+
+        elif 'time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
-            speak(f"Mam, the time is {strTime}")
+            speak("Mam, the time is {strTime}")
 
-        elif 'open code' in query:
-            codePath = "C:\\Users\\kishancjx\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
-            os.startfile(codePath)
-            # you should enter your path here
+        elif 'open pycharm projects' in query:
+            pycode = "C:\\Users\\Vaishali\\PycharmProjects"
+            os.startfile(pycode)
 
-       
+        elif 'open sublime text' in query:
+            sublime ="C:\\Program Files (x86)\\Sublime Text 3\\sublime_text.exe"
+            os.startfile(sublime)
+
+        elif 'mail' in query:
+            get_email_info()
+            send_email(receiver, subject, message)
+
+        elif "teams" in query or "microsoft teams" in query:
+            team = "C:\\Users\\Vaishali\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Teams.lnk"
+            os.startfile(team)
+
+
+        elif "zoom meeting" in query:
+            zoom ="C:\\Users\\Vaishali\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Zoom\\Zoom.lnk"
+            os.startfile(zoom)
+
+        elif "android studio" in query:
+            android ="C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Android Studio\\Android Studio.lnk"
+            os.startfile(android)
+
+        elif 'joke' in query:
+            speak(pyjokes.get_joke())
+
+
