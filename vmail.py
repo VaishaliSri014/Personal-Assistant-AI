@@ -28,9 +28,9 @@ def send_email(receiver, subject, message):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     # Make sure to give app access in your Google account
-    server.login('pyprojectvirtual@gmail.com', 'virtualmail')
+    server.login('#user email', '#password')
     email = EmailMessage()
-    email['From'] = 'pyprojectvirtual@gmail.com'#user email
+    email['From'] = #user email
     email['To'] = receiver
     email['Subject'] = subject
     email.set_content(message)
